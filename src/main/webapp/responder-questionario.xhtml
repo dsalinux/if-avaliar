@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link href="./resources/css/default.css" rel="stylesheet" type="text/css" />
+        <link href="./resources/css/cssLayout.css" rel="stylesheet" type="text/css" />
+        <title>Responder questionário</title>
+        <style>
+            body {
+                padding: 15px;
+            }
+        </style>
+    </h:head>
+
+    <h:body>
+        <h:form>
+            <p:dialog height="60" width="220" widgetVar="dialogAjax" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                <h:panelGrid columns="2" columnClasses="columnEsquerda, columnDireita">
+                    <h:graphicImage value="./resources/imagens/load.gif" style="width: 48px; margin-right: 10px;"/>
+                    <h:outputText style="float: right; vertical-align: middle; font-weight: bold; border: none; background: none;-moz-box-shadow: inset 0px 0px 0px #fff;-webkit-box-shadow: inset 0px 0px 0px white;box-shadow: inset 0px 0px 0px white;" styleClass="ui-state-default" value="Processando!"></h:outputText>
+                </h:panelGrid>
+            </p:dialog>
+            <p:ajaxStatus onstart="PF('dialogAjax').show()" oncomplete="PF('dialogAjax').hide()" onerror="PF('dialogAjax').hide(); showError" onsuccess="PF('dialogAjax').hide()" id="ajaxStatusPanel">  
+            </p:ajaxStatus>
+            <div style="height: 80px">
+                <h:graphicImage library="imagens" name="logo.png" style="display: block;max-width: 170px; max-height: 80px; float: left"></h:graphicImage>
+                <h1 style="float: left">Responda o questionário abaixo.</h1>
+            </div>
+            <p:commandButton value="Sair" icon="fa fa-sign-out" actionListener="#{responderQuestionarioBean.sair()}" style="float: right;"></p:commandButton>
+            <h3>#{responderQuestionarioBean.questionarioAtual.nome}</h3>
+            <p:separator></p:separator>
+            <p:spacer height="5px"></p:spacer>
+            <p:messages autoUpdate="true" showDetail="true">
+                <p:effect type="pulsate" event="load" speed="200" delay="400">  
+                </p:effect> 
+            </p:messages>
+            <p:dataTable value="#{responderQuestionarioBean.listaCategoriasResposta}" var="catResp">
+                <f:facet name="header">
+                    Questionário
+                </f:facet>
+                <p:subTable value="#{catResp.respostas}" var="resp">
+                    <f:facet name="header">
+                        #{catResp.categoria.nome}
+                    </f:facet>
+                    <p:column headerText="Questão">
+                        #{resp.questao.questao}
+                    </p:column>
+                    <p:column headerText="Resposta">
+                        <h:panelGroup rendered="#{!resp.questao.dicursiva}">
+                            <p:selectOneRadio value="#{resp.resposta}">
+                                <f:selectItem itemLabel="Muito Importante" itemValue="1"></f:selectItem>
+                                <f:selectItem itemLabel="Importante"  itemValue="2"></f:selectItem>
+                                <f:selectItem itemLabel="Pouco Importante"  itemValue="3"></f:selectItem>
+                            </p:selectOneRadio>
+                        </h:panelGroup>
+                        <p:inputTextarea rendered="#{resp.questao.dicursiva}" value="#{resp.resposta}" style="width: 100%" rows="1"></p:inputTextarea>
+                    </p:column>
+                </p:subTable>
+                <f:facet name="footer">
+                    <p:commandButton value="Pronto? Terminou? Clique aqui." actionListener="#{responderQuestionarioBean.finalizar()}" update="@form"></p:commandButton>
+                </f:facet>
+            </p:dataTable>
+        </h:form>
+    </h:body>
+
+</html>
+

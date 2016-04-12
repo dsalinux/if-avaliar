@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="template.xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:if="http://java.sun.com/jsf/composite/if">
+
+    <h:head></h:head>
+
+    <h:form id="frm">
+
+        <if:toolbar controller="#{gerenciarQuestaoBean}" icon="fa-question" title="Gerenciar Questão"/>
+
+        <h:panelGrid columns="1" width="100%" rendered="#{gerenciarQuestaoBean.currentStateName != 'SEARCH'}">
+            <h:outputLabel for="nome" value="Nome:"></h:outputLabel>
+            <p:inputTextarea id="nome" cols="40" value="#{gerenciarQuestaoBean.entity.questao}"></p:inputTextarea>
+            <h:outputLabel for="questionarioselect" value="Questionário:"></h:outputLabel>
+            <p:selectOneMenu id="questionarioselect" value="#{gerenciarQuestaoBean.entity.questionario}" converter="#{gerenciarQuestaoBean.questionarioConverter}">
+                <f:selectItem itemLabel="Selecione"></f:selectItem>
+                <f:selectItems value="#{gerenciarQuestaoBean.listaQuestionario}" var="quest" itemLabel="#{quest.nome}" itemValue="#{quest}"></f:selectItems>
+            </p:selectOneMenu>
+            <h:outputLabel for="tipoDiscursiva" value="Tipo de questão discursiva? "></h:outputLabel>
+            <h:outputLabel for="categoriaselect" value="Categoria:"></h:outputLabel>
+            <p:selectOneMenu id="categoriaselect" value="#{gerenciarQuestaoBean.entity.categoria}" converter="#{gerenciarQuestaoBean.categoriaConverter}">
+                <f:selectItem itemLabel="Selecione"></f:selectItem>
+                <f:selectItems value="#{gerenciarQuestaoBean.listaCategoria}" var="cat" itemLabel="#{cat.nome}" itemValue="#{cat}"></f:selectItems>
+            </p:selectOneMenu>
+            <h:outputLabel for="ordemQuestao" value="Ordem da questão: "></h:outputLabel>
+            <p:spinner value="#{gerenciarQuestaoBean.entity.ordem}" id="ordemQuestao"></p:spinner>
+            <h:outputLabel for="tipoDiscursiva" value="Tipo de questão discursiva? "></h:outputLabel>
+            <p:selectBooleanButton offLabel="Não" onLabel="Sim" id="tipoDiscursiva" value="#{gerenciarQuestaoBean.entity.dicursiva}"></p:selectBooleanButton>
+            
+        </h:panelGrid>
+
+        <p:dataTable emptyMessage="Nenhum dado para listar." value="#{gerenciarQuestaoBean.entitys}" id="resultSet" var="entity" rendered="#{gerenciarQuestaoBean.currentStateName == 'SEARCH'}">
+            <p:column style="width: 20px;"><p:commandLink styleClass="ui-icon ui-icon-pencil" actionListener="#{gerenciarQuestaoBean.edit(entity)}" update=":frm"></p:commandLink></p:column>
+            <p:column headerText="Nome" sortBy="#{entity.questao}"><h:outputText value="#{entity.questao.length() > 40?entity.questao.substring(0, 40):entity.questao}..."></h:outputText></p:column>
+            <p:column headerText="Categoria" sortBy="#{entity.categoria.nome}"><h:outputText value="#{entity.categoria.nome}"></h:outputText></p:column>
+            <p:column headerText="Questionário" sortBy="#{entity.questionario.nome}"><h:outputText value="#{entity.questionario.nome}"></h:outputText></p:column>
+        </p:dataTable>
+
+    </h:form>
+</ui:composition>
+

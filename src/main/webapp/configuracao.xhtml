@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="template.xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:if="http://java.sun.com/jsf/composite/if">
+
+    <h:head></h:head>
+
+    <h:form id="frm">
+
+        <p:commandButton value="Salvar" actionListener="#{configuracaoBean.salvar()}" update="@form"></p:commandButton>
+        <p:commandButton value="Atualizar" actionListener="#{configuracaoBean.buscar()}" update="@form"></p:commandButton>
+
+
+        <h:panelGrid columns="1" width="100%">
+            <h:outputLabel for="questionarioselect" value="Questionário atual:"></h:outputLabel>
+            <p:selectOneMenu id="questionarioselect" value="#{configuracaoBean.entity.questionario}" converter="#{configuracaoBean.questionarioConverter}">
+                <f:ajax event="change" listener="#{configuracaoBean.salvar()}"></f:ajax>
+                <f:selectItem itemLabel="Selecione"></f:selectItem>
+                <f:selectItems value="#{configuracaoBean.listaQuestionario}" var="quest" itemLabel="#{quest.nome}" itemValue="#{quest}"></f:selectItems>
+            </p:selectOneMenu>
+            <h:outputLabel for="questionarioAtivo" value="Questionário ativo?"></h:outputLabel>
+            <p:selectBooleanButton offLabel="Não" onLabel="Sim" value="#{configuracaoBean.entity.ativo}">
+                <f:ajax event="change" listener="#{configuracaoBean.salvar()}"></f:ajax>
+            </p:selectBooleanButton>
+        </h:panelGrid>
+    </h:form>
+</ui:composition>
+
